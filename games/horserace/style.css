@@ -1,0 +1,137 @@
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0; height: 100%;
+  background: #8fd16a;
+  /* Chalkboard / Comic Sans have the "a" and "g" kids learn to read */
+  font-family: "Chalkboard SE", "Comic Sans MS", "Trebuchet MS", system-ui, sans-serif;
+  touch-action: manipulation;
+  user-select: none; -webkit-user-select: none;
+  overscroll-behavior: none;
+}
+
+body {
+  display: flex; flex-direction: column; gap: 12px;
+  height: 100vh; height: 100dvh;
+  padding: calc(env(safe-area-inset-top) + 64px) 12px calc(env(safe-area-inset-bottom) + 12px);
+}
+
+/* ---------- corner buttons ---------- */
+.corner {
+  position: fixed; z-index: 10; top: calc(env(safe-area-inset-top) + 10px);
+  font-size: clamp(24px, 5vw, 36px); line-height: 1; text-decoration: none;
+  background: rgba(255,255,255,.85); border: 0; border-radius: 14px; padding: 6px 10px;
+  box-shadow: 0 2px 0 rgba(0,0,0,.2); cursor: pointer; font-family: inherit;
+}
+#home { left: 12px; }
+#mute { right: 12px; }
+
+/* ---------- race track ---------- */
+#track {
+  position: relative; flex: 1 1 50%; min-height: 160px;
+  display: flex; flex-direction: column;
+  background: #c98b4a; border: 6px solid #fff; border-radius: 20px; overflow: hidden;
+}
+/* checkered finish line */
+#track::after {
+  content: ""; position: absolute; top: 0; bottom: 0; right: 6%; width: 18px;
+  background: repeating-conic-gradient(#222 0 25%, #fff 0 50%) 0 0 / 18px 18px;
+}
+.lane { position: relative; flex: 1; border-bottom: 3px dashed rgba(255,255,255,.45); }
+.lane:last-child { border-bottom: 0; }
+.lane.you { background: rgba(255,236,120,.45); }
+.you-tag {
+  position: absolute; right: calc(6% + 26px); top: 50%; transform: translateY(-50%);
+  font-size: clamp(14px, 3vw, 22px);
+  font-weight: bold; color: #7a4a10;
+}
+.runner {
+  position: absolute; top: 50%; z-index: 1;
+  font-size: min(8vh, 11vw); line-height: 1; width: 1.3em; text-align: center;
+  left: calc(var(--p, 0) * (94% - 1.3em));
+  transform: translateY(-50%);
+}
+.runner.you { transition: left .6s ease-out; }
+.runner span { display: inline-block; transform: scaleX(-1); } /* face right, toward the finish */
+#track.running .runner span { animation: gallop .35s infinite alternate ease-in-out; }
+#track.running .runner.done span { animation: none; }
+@keyframes gallop {
+  from { transform: scaleX(-1) translateY(0) rotate(0deg); }
+  to   { transform: scaleX(-1) translateY(-12%) rotate(-6deg); }
+}
+
+/* ---------- question area ---------- */
+#quiz {
+  flex: 0 0 auto; background: #fff; border-radius: 20px; padding: 14px 12px 20px;
+  text-align: center; min-height: 40%;
+  display: flex; flex-direction: column; justify-content: center; gap: 16px;
+}
+#prompt-row { display: flex; align-items: center; justify-content: center; gap: 16px; }
+#say {
+  font-size: clamp(30px, 6vw, 48px); line-height: 1; border: 0; border-radius: 50%;
+  width: 1.8em; height: 1.8em; background: #e3f1ff; cursor: pointer; flex: 0 0 auto;
+}
+#say[hidden] { display: none; }
+#prompt { font-size: clamp(34px, 8vw, 68px); font-weight: bold; color: #333; }
+#prompt.small { font-size: clamp(24px, 5vw, 40px); font-weight: normal; }
+
+#choices { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(12px, 3vw, 28px); }
+.choice {
+  font-family: inherit; font-size: clamp(34px, 8vw, 64px); line-height: 1.1;
+  min-width: 2.6em; padding: .25em .55em; border: 0; border-radius: 22px; cursor: pointer;
+  background: #ffe08a; color: #333; box-shadow: 0 6px 0 #d9a520;
+}
+.choice:active { transform: translateY(4px); box-shadow: 0 2px 0 #d9a520; }
+.choice.right { background: #7ed957; box-shadow: 0 6px 0 #4c9e2c; }
+.choice.wrong { background: #e4e4e4; box-shadow: 0 6px 0 #bbb; color: #aaa; animation: shake .3s; }
+@keyframes shake {
+  25% { transform: translateX(-8px); } 75% { transform: translateX(8px); }
+}
+
+/* ---------- 3-2-1-GO ---------- */
+#countdown {
+  position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+  font-size: min(40vw, 40vh); font-weight: bold; color: #fff; pointer-events: none;
+  text-shadow: 0 8px 0 rgba(0,0,0,.25); z-index: 5;
+}
+#countdown.show { display: flex; }
+
+/* ---------- start / results screen ---------- */
+#overlay {
+  position: fixed; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.5); padding: 70px 12px 12px; overflow-y: auto;
+}
+#overlay.hidden { display: none; }
+#overlay-box {
+  background: #fff; border-radius: 24px; padding: 22px 28px; text-align: center;
+  max-width: 94vw; margin: auto;
+}
+#overlay-box h1 { margin: 0 0 6px; font-size: clamp(30px, 7vw, 56px); }
+#overlay-box p { margin: 0 0 14px; font-size: clamp(18px, 4vw, 26px); }
+.label { font-size: clamp(16px, 3.5vw, 22px); color: #777; margin-bottom: 6px; }
+.picks { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 16px; }
+.pick {
+  font-family: inherit; font-size: clamp(30px, 7vw, 52px); line-height: 1; padding: 8px 12px;
+  background: #f2f2f2; border: 4px solid transparent; border-radius: 18px; cursor: pointer;
+}
+.pick span { display: inline-block; transform: scaleX(-1); }
+.pick.mode { font-size: clamp(20px, 4.5vw, 32px); padding: 10px 16px; }
+.pick.selected { background: #fff3cf; border-color: #ff9d00; }
+
+#speed-row {
+  display: flex; align-items: center; gap: 12px; justify-content: center;
+  font-size: clamp(26px, 6vw, 40px); margin-bottom: 16px;
+}
+#speed { width: min(55vw, 300px); height: 44px; accent-color: #ff9d00; }
+#start {
+  font-size: clamp(22px, 5vw, 36px); padding: 14px 32px; border: 0; border-radius: 18px;
+  background: #ff9d00; color: #fff; cursor: pointer; font-family: inherit;
+}
+#wins-row { margin: 14px 0 0 !important; color: #777; }
+
+/* ---------- celebration ---------- */
+.confetti {
+  position: fixed; top: -10vh; z-index: 7; font-size: clamp(28px, 6vw, 48px);
+  pointer-events: none; animation: fall linear forwards;
+}
+@keyframes fall { to { transform: translateY(120vh) rotate(540deg); } }

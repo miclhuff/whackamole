@@ -14,4 +14,5 @@
 // ======================================================
 var GAMES = [
   { folder: "whackamole", title: "Whack-a-Mole", icon: "icon.png", emoji: "🐹", color: "#7ec850" },
+  { folder: "horserace",  title: "Horse Race",   emoji: "🏇", color: "#f4a640" },
 ];

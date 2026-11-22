@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Horse Race</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Games">
+  <meta name="theme-color" content="#8fd16a">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="apple-touch-icon" href="../../icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a id="home" class="corner" href="../../" aria-label="Back to all games">🏠</a>
+  <button id="mute" class="corner" aria-label="Sound on or off">🔔</button>
+
+  <div id="track"></div>
+
+  <div id="quiz">
+    <div id="prompt-row">
+      <button id="say" aria-label="Say it again">🔊</button>
+      <div id="prompt"></div>
+    </div>
+    <div id="choices"></div>
+  </div>
+
+  <div id="countdown"></div>
+
+  <div id="overlay">
+    <div id="overlay-box">
+      <h1 id="overlay-title">Horse Race!</h1>
+      <p id="overlay-text">Get answers right to make your horse run!</p>
+      <div class="label">Pick your racer</div>
+      <div id="racers" class="picks"></div>
+      <div class="label">What do you want to play?</div>
+      <div id="modes" class="picks"></div>
+      <div id="speed-row">
+        <span aria-hidden="true">🐢</span>
+        <input type="range" id="speed" min="1" max="5" step="1" value="2" aria-label="How fast the other horses run">
+        <span aria-hidden="true">⚡</span>
+      </div>
+      <button id="start">Start the race!</button>
+      <p id="wins-row">🏆 Wins: <b id="wins">0</b></p>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
