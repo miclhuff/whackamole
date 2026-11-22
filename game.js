@@ -3,7 +3,9 @@
 // ======================================================
 var SETTINGS = {
   roundSeconds: 30,          // how long one round lasts
-  moleEmoji: "🐹",           // the thing you whack
+  animals: ["🐹", "🐴", "🐰", "🐸", "🦖", "🐱"],  // pick from these (add your own emoji!)
+  speed: 3,                  // starting speed, 1 (slow) to 5 (fast)
+  speedFactors: [1.6, 1.25, 1, 0.75, 0.55],  // time multiplier for speed 1 to 5 (smaller = faster)
   bonusEmoji: "⭐",          // a rare bonus thing
   bonusChance: 0.12,         // 0 = never, 1 = always
   bonusPoints: 5,            // points for a bonus
@@ -112,10 +114,10 @@ var SETTINGS = {
     if (free.length === 0) { return; }
     var h = free[Math.floor(Math.random() * free.length)];
     h.bonus = Math.random() < SETTINGS.bonusChance;
-    h.moleEl.textContent = h.bonus ? SETTINGS.bonusEmoji : SETTINGS.moleEmoji;
+    h.moleEl.textContent = h.bonus ? SETTINGS.bonusEmoji : currentAnimal;
     h.up = true;
     h.el.classList.add("up");
-    var stay = SETTINGS.stayUpMsMin + Math.random() * (SETTINGS.stayUpMsMax - SETTINGS.stayUpMsMin);
+    var stay = (SETTINGS.stayUpMsMin + Math.random() * (SETTINGS.stayUpMsMax - SETTINGS.stayUpMsMin)) * speedFactor;
     h.timer = setTimeout(function () { hideMole(h); }, stay);
   }
 
@@ -147,6 +149,8 @@ var SETTINGS = {
 
   function startGame() {
     unlockAudio();
+    speedFactor = SETTINGS.speedFactors[parseInt(speedEl.value, 10) - 1] || 1;
+    try { localStorage.setItem("whackamole-speed", speedEl.value); } catch (e) {}
     setScore(0);
     timeLeft = SETTINGS.roundSeconds;
     timeEl.textContent = timeLeft;
@@ -155,7 +159,7 @@ var SETTINGS = {
     holes.forEach(hideMole);
     sounds.start();
 
-    spawnTimer = setInterval(showMole, SETTINGS.spawnEveryMs);
+    spawnTimer = setInterval(showMole, SETTINGS.spawnEveryMs * speedFactor);
     clockTimer = setInterval(function () {
       timeLeft -= 1;
       timeEl.textContent = timeLeft;
@@ -182,6 +186,42 @@ var SETTINGS = {
     startBtn.textContent = "Play again";
     overlay.classList.remove("hidden");
   }
+
+  // ---------- animal picker and speed slider ----------
+  var animalsEl = document.getElementById("animals");
+  var speedEl = document.getElementById("speed");
+  var currentAnimal = SETTINGS.animals[0];
+  var speedFactor = 1;
+
+  speedEl.value = SETTINGS.speed;
+  try {
+    var savedAnimal = localStorage.getItem("whackamole-animal");
+    if (savedAnimal && SETTINGS.animals.indexOf(savedAnimal) !== -1) { currentAnimal = savedAnimal; }
+    var savedSpeed = parseInt(localStorage.getItem("whackamole-speed"), 10);
+    if (savedSpeed >= 1 && savedSpeed <= SETTINGS.speedFactors.length) { speedEl.value = savedSpeed; }
+  } catch (e) {}
+
+  var animalButtons = SETTINGS.animals.map(function (emoji) {
+    var b = document.createElement("button");
+    b.className = "animal-btn";
+    b.textContent = emoji;
+    b.addEventListener("click", function () {
+      currentAnimal = emoji;
+      try { localStorage.setItem("whackamole-animal", emoji); } catch (e) {}
+      showSelected();
+    });
+    animalsEl.appendChild(b);
+    return b;
+  });
+
+  function showSelected() {
+    animalButtons.forEach(function (b) {
+      var on = b.textContent === currentAnimal;
+      b.classList.toggle("selected", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+  }
+  showSelected();
 
   startBtn.addEventListener("click", startGame);
 

@@ -26,7 +26,13 @@
   <div id="overlay">
     <div id="overlay-box">
       <h1 id="overlay-title">Whack-a-Mole!</h1>
-      <p id="overlay-text">Tap the moles!</p>
+      <p id="overlay-text">Pick an animal, then tap it!</p>
+      <div id="animals"></div>
+      <div id="speed-row">
+        <span aria-hidden="true">🐢</span>
+        <input type="range" id="speed" min="1" max="5" step="1" value="3" aria-label="Speed">
+        <span aria-hidden="true">⚡</span>
+      </div>
       <button id="start">Tap to play</button>
     </div>
   </div>
