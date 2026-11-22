@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Whack-a-Mole</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Whack-a-Mole">
+  <meta name="theme-color" content="#7ec850">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="hud">
+    <div>Score: <b id="score">0</b></div>
+    <div>Time: <b id="time">30</b></div>
+    <div>Best: <b id="best">0</b></div>
+    <button id="mute" aria-label="Sound on or off">🔊</button>
+  </div>
+
+  <div id="board"></div>
+
+  <div id="overlay">
+    <div id="overlay-box">
+      <h1 id="overlay-title">Whack-a-Mole!</h1>
+      <p id="overlay-text">Tap the moles!</p>
+      <button id="start">Tap to play</button>
+    </div>
+  </div>
+
+  <div id="version"></div>
+
+  <script src="version.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
