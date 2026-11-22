@@ -1,13 +1,20 @@
 // Service worker: network-first.
 // Online  -> always loads the newest files (skips the browser HTTP cache).
 // Offline -> uses the last copy that was saved.
+// Every game lives under this folder, so this one worker covers them all.
+// Files are saved the first time they load, so a game works offline after it has been played once.
 importScripts("version.js"); // defines APP_VERSION. A new version number also makes this file "new".
+importScripts("games.js");   // defines GAMES
 
-var CACHE = "whackamole-v" + APP_VERSION;
+var CACHE = "games-v" + APP_VERSION;
 var FILES = [
-  "./", "index.html", "style.css", "game.js", "version.js",
+  "./", "index.html", "gallery.css", "gallery.js", "games.js", "version.js",
   "manifest.webmanifest", "icon-192.png", "icon-512.png"
 ];
+GAMES.forEach(function (g) {
+  FILES.push("games/" + g.folder + "/");
+  if (g.icon) { FILES.push("games/" + g.folder + "/" + g.icon); }
+});
 
 self.addEventListener("install", function (event) {
   self.skipWaiting(); // do not wait for old tabs to close
@@ -16,7 +23,7 @@ self.addEventListener("install", function (event) {
       return Promise.all(FILES.map(function (f) {
         return fetch(f, { cache: "reload" }).then(function (res) {
           if (res.ok) { return cache.put(f, res); }
-        });
+        }).catch(function () {}); // one missing file should not stop the rest
       }));
     })
   );

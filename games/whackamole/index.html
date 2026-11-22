@@ -8,12 +8,14 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Whack-a-Mole">
   <meta name="theme-color" content="#7ec850">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="icon" href="icon-192.png">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="apple-touch-icon" href="../../icon-192.png">
+  <link rel="icon" href="icon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a id="home" href="../../" aria-label="Back to all games">🏠</a>
+
   <div id="hud">
     <div>Score: <b id="score">0</b></div>
     <div>Time: <b id="time">30</b></div>
@@ -37,9 +39,6 @@
     </div>
   </div>
 
-  <div id="version"></div>
-
-  <script src="version.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

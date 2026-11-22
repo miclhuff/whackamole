@@ -31,7 +31,6 @@ var SETTINGS = {
   var startBtn = document.getElementById("start");
   var muteBtn = document.getElementById("mute");
 
-  document.getElementById("version").textContent = "v" + (window.APP_VERSION || "?");
   document.documentElement.style.setProperty("--bg", SETTINGS.backgroundColor);
   document.documentElement.style.setProperty("--hole", SETTINGS.holeColor);
 
@@ -224,11 +223,4 @@ var SETTINGS = {
   showSelected();
 
   startBtn.addEventListener("click", startGame);
-
-  // ---------- offline support (service worker) ----------
-  // Only on the real website (https). Not on localhost, so your edits always show up.
-  var isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1" || location.hostname === "[::1]";
-  if ("serviceWorker" in navigator && location.protocol === "https:" && !isLocal) {
-    navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(function () {});
-  }
 })();
